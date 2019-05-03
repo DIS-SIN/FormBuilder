@@ -31,6 +31,7 @@ class App extends React.Component {
         {
           key: "cars", // required
           type: "dropdown", // required
+          required: true,
           options: [
             {
               label: "Saab",
@@ -42,14 +43,23 @@ class App extends React.Component {
             }
           ]
         },
+        {
+          key: "submit",
+          type: "submit",
+          placeholder: "submit",
+        }
       ],
     }
+  }
+
+  onChange = values => {
+    console.log(values)
   }
 
   render() {
     return (
       <React.Fragment>
-        <Form schema={this.state.form} />
+        <Form schema={this.state.form} onChange={this.onChange} />
       </React.Fragment>
     );
   }

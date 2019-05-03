@@ -1,16 +1,20 @@
 import React from 'react'
+import PropTypes from 'prop-types';
 
 class FormBuilder extends React.Component {
     constructor(props){
         super(props)
         this.state = {
+            values: {}
         }
-        this.handleValueChange = this.handleValueChange.bind(this)
     }
 
     handleValueChange = (input) => (e) => {
+        let values = this.state.values
         e.preventDefault()
-        this.setState({[input.key]: e.target.value})
+        values[input.key] = e.target.value
+        this.props.onChange(values)
+        this.setState({values: values})
     }
 
     render(){
@@ -23,15 +27,18 @@ class FormBuilder extends React.Component {
         const field = (input) => (
             <input {...input} onChange={this.handleValueChange(input)}/>
         )
-        const dropdown = (input) => (
-            <select onChange={this.handleValueChange(input)} {...input}>
-                {
-                    input.options.map(option => (
-                        <option key={option.value} {...option}>{option.label}</option>
-                    ))
-                }
-            </select>
-        )
+        const dropdown = (input) => {
+            return (
+                <select onChange={this.handleValueChange(input)} {...input}>
+                    <option></option>
+                    {
+                        input.options.map((option, index) => (
+                            <option key={option.value} {...option}>{option.label}</option>
+                        ))
+                    }
+                </select>
+            )
+        }
         const element = (input) => {
             switch(input.type){
                 case "dropdown":
@@ -56,5 +63,10 @@ class FormBuilder extends React.Component {
         )
     }
 }
+
+FormBuilder.propTypes = {
+    schema: PropTypes.array.isRequired,
+    onChange: PropTypes.func.isRequired
+};
 
 export default FormBuilder
